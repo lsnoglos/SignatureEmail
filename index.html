@@ -246,7 +246,46 @@
         
         function updateAndRerender() { const formContainer = document.querySelector('#editor-wrapper .card-content'); if (formContainer) formContainer.innerHTML = renderEditorForm(); const previewContainer = document.getElementById('preview-wrapper'); if (previewContainer) previewContainer.innerHTML = renderPreviewCard(); }
         function showToast(title, description, variant = 'default') { const toast = document.createElement('div'); toast.className = `toast ${variant}`; toast.innerHTML = `<div class="toast-title">${title}</div>${description ? `<div>${description}</div>` : ''}`; toasterContainer.appendChild(toast); setTimeout(() => { toast.remove(); }, 3000); }
-        async function handleCopyHtml() { const html = generateSignatureHtml(signatureData); try { const blob = new Blob([html], { type: 'text/html' }); const clipboardItem = new ClipboardItem({ 'text/html': blob }); await navigator.clipboard.write([clipboardItem]); showToast("¡Firma Copiada!", "HTML de la firma copiado. Pégalo en tu cliente de correo."); } catch (err) { console.error("Fallo al copiar HTML enriquecido: ", err); try { await navigator.clipboard.writeText(html); showToast("Copiado como Texto Plano", "El HTML se copió como texto. Si ves el código al pegar, usa un navegador más moderno.", "destructive"); } catch (fallbackErr) { console.error("Fallo al copiar como texto plano:", fallbackErr); showToast("Fallo al Copiar", "No se pudo copiar el HTML al portapapeles.", "destructive"); } } }
+
+async function handleCopyHtml() {
+    const html = generateSignatureHtml(signatureData);
+    if (!html) {
+        showToast("Error", "No hay firma para copiar.", "destructive");
+        return;
+    }
+
+    try {
+        // Paso 1: Crear un "Blob" (un objeto tipo archivo) con el contenido HTML.
+        // Es crucial especificar el tipo 'text/html'.
+        const blob = new Blob([html], { type: 'text/html' });
+
+        // Paso 2: Crear un item para el portapapeles.
+        // Esto le dice al navegador "estoy copiando contenido HTML".
+        const clipboardItem = new ClipboardItem({
+            'text/html': blob
+        });
+
+        // Paso 3: Escribir el item en el portapapeles.
+        await navigator.clipboard.write([clipboardItem]);
+
+        showToast("¡Firma Copiada!", "Pégala en Gmail o Outlook para un mejor resultado.");
+
+    } catch (err) {
+        console.error("Fallo al copiar como HTML enriquecido. Intentando como texto plano.", err);
+        
+        // Plan B: Si lo anterior falla, copiar como texto plano (aunque perderá las imágenes en el pegado).
+        try {
+            await navigator.clipboard.writeText(html);
+            showToast("Copiado como Texto Plano", "No se pudo copiar el formato enriquecido. Pega el código en un editor HTML.", "destructive");
+        } catch (fallbackErr) {
+            console.error("Fallo total al copiar:", fallbackErr);
+            showToast("Fallo al Copiar", "Tu navegador no pudo acceder al portapapeles.", "destructive");
+        }
+    }
+}
+
+
+
         appContainer.addEventListener('input', e => { const target = e.target; if (target.dataset.property) { const property = target.dataset.property; const value = target.type === 'number' ? (parseInt(target.value, 10) || 0) : target.value; signatureData[property] = value; document.getElementById('signature-render-area').innerHTML = generateSignatureHtml(signatureData); } if (target.dataset.styleProperty) { const property = target.dataset.styleProperty; const prefix = target.dataset.stylePrefix; const value = target.type === 'checkbox' ? target.checked : (target.type === 'number' ? (parseInt(target.value, 10) || 0) : target.value); signatureData[prefix][property] = value; document.getElementById('signature-render-area').innerHTML = generateSignatureHtml(signatureData); } });
         appContainer.addEventListener('change', e => { const target = e.target; if (target.matches('select[data-property], input[type="checkbox"][data-property]')) { const property = target.dataset.property; const value = target.type === 'checkbox' ? target.checked : target.value; signatureData[property] = value; if (property === 'useCustomImage') { if (!value) { signatureData.logo = uccDefaultLogoSquare; signatureData.bannerImage = uccDefaultBanner; } else { if (signatureData.logo === uccDefaultLogoSquare) signatureData.logo = null; if (signatureData.bannerImage === uccDefaultBanner) signatureData.bannerImage = null; } } updateAndRerender(); } if (target.dataset.imageUploadFor) { const property = target.dataset.imageUploadFor; const file = e.target.files[0]; if (file) { const reader = new FileReader(); reader.onloadend = () => { signatureData[property] = reader.result; updateAndRerender(); }; reader.readAsDataURL(file); } } });
         appContainer.addEventListener('click', e => { const target = e.target.closest('button'); if (!target) return; if (target.id === 'copy-btn') { handleCopyHtml(); } if (target.dataset.toggleStyleEditor) { const fieldName = target.dataset.toggleStyleEditor; const editor = document.querySelector(`[data-style-editor-for="${fieldName}"]`); if (editor) { editor.classList.toggle('hidden'); } } if (target.dataset.removeImageFor) { const property = target.dataset.removeImageFor; signatureData[property] = null; updateAndRerender(); } });

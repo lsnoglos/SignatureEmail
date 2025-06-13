@@ -695,7 +695,7 @@
                 
                 bannerWidth: 400,
                 bannerPadding: 10,
-                bannerAlignment: 'center',
+                bannerAlignment: 'left',
                 
                 containerBorderVisible: false, containerBorderThickness: 2, containerBorderRadius: 8, containerBorderGradientStart: '#D4AC0D', containerBorderGradientEnd: '#1A5276', containerBackgroundColor: '#ffffff', containerShadowVisible: false, containerShadowX: 0, containerShadowY: 4, containerShadowBlur: 10, containerShadowColor: 'rgba(0,0,0,0.1)',
                 
@@ -1197,20 +1197,21 @@
                         signatureData.containerShadowBlur = 20;
                     } else if (presetName === 'banner') {
                         signatureData.selectedTemplate = 'banner';
-                        signatureData.fullNameStyle = defaultFieldStyle(20, '#000000', true, false);
-                        signatureData.titleStyle = defaultFieldStyle(14, '#000000', true, false);
-                        signatureData.phoneStyle = defaultFieldStyle(12, '#000000');
-                        signatureData.nombreSede = '';
+                        signatureData.fullNameStyle = defaultFieldStyle(14, '#444444', true, false);
+                        signatureData.titleStyle = defaultFieldStyle(14, '#063561', true, false);
+                        signatureData.nombreSedeStyle = defaultFieldStyle(14, '#063561', true, false);
+                        signatureData.phone = '';
                         signatureData.address = '';
                         signatureData.websiteUrl = '';
                         signatureData.cita = '';
-                        signatureData.infoTextAlign = 'center';
+                        signatureData.infoTextAlign = 'left';
                         signatureData.infoPaddingTop = 0;
                         signatureData.infoPaddingRight = 0;
                         signatureData.infoPaddingBottom = 0;
                         signatureData.infoPaddingLeft = 0;
                         signatureData.bannerWidth = 350;
                         signatureData.bannerPadding = 0;
+                        signatureData.bannerAlignment = 'left';
                     } else if (presetName === 'colorido') {
                         
                         signatureData.selectedTemplate = 'classic';

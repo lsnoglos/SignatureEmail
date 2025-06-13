@@ -695,6 +695,7 @@
                 
                 bannerWidth: 400,
                 bannerPadding: 10,
+                bannerAlignment: 'center',
                 
                 containerBorderVisible: false, containerBorderThickness: 2, containerBorderRadius: 8, containerBorderGradientStart: '#D4AC0D', containerBorderGradientEnd: '#1A5276', containerBackgroundColor: '#ffffff', containerShadowVisible: false, containerShadowX: 0, containerShadowY: 4, containerShadowBlur: 10, containerShadowColor: 'rgba(0,0,0,0.1)',
                 
@@ -1049,7 +1050,31 @@
                 `;
             }
 
-            function renderBannerStyles() { return ` <div class="mt-4 space-y-2"> <h3 class="font-headline text-lg label">${icons.image} Personaliza Banner</h3><div class="grid grid-cols-1 md:grid-cols-2 gap-4"> <div> <label class="label text-xs mb-1">Tamaño</label> <input type="number" class="input text-xs" data-property="bannerWidth" value="${signatureData.bannerWidth}"> </div> <div> <label class="label text-xs mb-1">Espacios alrededor del banner</label> <input type="number" class="input text-xs" data-property="bannerPadding" value="${signatureData.bannerPadding}"> </div> </div> </div> `; }
+            function renderBannerStyles() {
+                return `
+                <div class="mt-4 space-y-2">
+                    <h3 class="font-headline text-lg label">${icons.image} Personaliza Banner</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div>
+                            <label class="label text-xs mb-1">Tamaño (px)</label>
+                            <input type="number" class="input text-xs" data-property="bannerWidth" value="${signatureData.bannerWidth}">
+                        </div>
+                        <div>
+                            <label class="label text-xs mb-1">Espacios alrededor (px)</label>
+                            <input type="number" class="input text-xs" data-property="bannerPadding" value="${signatureData.bannerPadding}">
+                        </div>
+                        <div>
+                            <label class="label text-xs mb-1">Alineación</label>
+                            <select class="select text-xs" data-property="bannerAlignment">
+                                <option value="left" ${signatureData.bannerAlignment === 'left' ? 'selected' : ''}>Izquierda</option>
+                                <option value="center" ${signatureData.bannerAlignment === 'center' ? 'selected' : ''}>Centro</option>
+                                <option value="right" ${signatureData.bannerAlignment === 'right' ? 'selected' : ''}>Derecha</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                `;
+            }
             
             function convertGoogleDriveUrl(url) {
                 if (url.includes('drive.google.com/file/d/') && !url.includes('uc?export=view')) {
@@ -1063,7 +1088,7 @@
             }
 
             const generateSignatureHtml = (data) => {
-                const { fullName, title, nombreSede, phone, address, websiteUrl, cita, logo: customLogo, bannerImage: customBannerImage, useCustomImage, fontFamily, selectedTemplate, lineaSeparadoraVisible, lineaSeparadoraColor, separatorThickness, separatorHeight, separatorMargin, logoWidth, logoAlignment, logoVerticalAlignment, logoPaddingTop, logoPaddingRight, logoPaddingBottom, logoPaddingLeft, fullNameStyle, titleStyle, nombreSedeStyle, phoneStyle, addressStyle, websiteUrlStyle, citaStyle, bannerWidth, bannerPadding, containerBorderVisible, containerBorderThickness, containerBorderRadius, containerBorderGradientStart, containerBorderGradientEnd, containerBackgroundColor, containerShadowVisible, containerShadowX, containerShadowY, containerShadowBlur, containerShadowColor, infoTextAlign, infoPaddingTop, infoPaddingRight, infoPaddingBottom, infoPaddingLeft } = data;
+                const { fullName, title, nombreSede, phone, address, websiteUrl, cita, logo: customLogo, bannerImage: customBannerImage, useCustomImage, fontFamily, selectedTemplate, lineaSeparadoraVisible, lineaSeparadoraColor, separatorThickness, separatorHeight, separatorMargin, logoWidth, logoAlignment, logoVerticalAlignment, logoPaddingTop, logoPaddingRight, logoPaddingBottom, logoPaddingLeft, fullNameStyle, titleStyle, nombreSedeStyle, phoneStyle, addressStyle, websiteUrlStyle, citaStyle, bannerWidth, bannerPadding, bannerAlignment, containerBorderVisible, containerBorderThickness, containerBorderRadius, containerBorderGradientStart, containerBorderGradientEnd, containerBackgroundColor, containerShadowVisible, containerShadowX, containerShadowY, containerShadowBlur, containerShadowColor, infoTextAlign, infoPaddingTop, infoPaddingRight, infoPaddingBottom, infoPaddingLeft } = data;
                 const effectiveLogo = useCustomImage && customLogo ? customLogo : uccDefaultLogoSquare;
                 const effectiveBanner = useCustomImage && customBannerImage ? customBannerImage : uccDefaultBanner;
                 
@@ -1082,7 +1107,30 @@
                     const separatorHtml = lineaSeparadoraVisible ? ` <td style="vertical-align: ${logoVerticalAlignment}; padding: 0 ${separatorMargin}px;"> <div style="height: ${separatorHeight}px; width: ${separatorThickness}px; background-color: ${lineaSeparadoraColor};"></div> </td>` : '<td></td>';
                     finalHtml = ` <table style="${tableContainerStyle}" cellpadding="0" cellspacing="0" border="0"> <tbody> <tr> <td style="${logoContainerStyle}"> ${effectiveLogo ? `<img src="${effectiveLogo}" alt="Logo" width="${logoWidth}" style="width: ${logoWidth}px; height: auto; display: inline-block; border-radius: 4px;">` : ''} </td> ${separatorHtml} <td style="vertical-align: ${logoVerticalAlignment}; ${infoContainerStyle}"> ${getFieldHtml(fullName, fullNameStyle)} ${getFieldHtml(title, titleStyle)} ${getFieldHtml(nombreSede, nombreSedeStyle)} ${getFieldHtml(address, addressStyle)} ${getFieldHtml(phone, phoneStyle)} ${getFieldHtml(websiteUrl, websiteUrlStyle, 'div', true, websiteUrl)} ${getFieldHtml(cita, citaStyle)} </td> </tr> </tbody> </table>`;
                 } else { 
-                    finalHtml = ` <table style="${tableContainerStyle}" cellpadding="0" cellspacing="0" border="0"> <tbody> <tr> <td> <div style="${infoContainerStyle} padding-bottom: 10px;"> ${getFieldHtml(fullName, fullNameStyle)} ${getFieldHtml(title, titleStyle)} ${getFieldHtml(nombreSede, nombreSedeStyle)} ${getFieldHtml(address, addressStyle)} ${getFieldHtml(phone, phoneStyle)} ${getFieldHtml(websiteUrl, websiteUrlStyle, 'div', true, websiteUrl)} ${getFieldHtml(cita, citaStyle)} </div> </td> </tr> ${effectiveBanner ? ` <tr> <td style="padding-top: ${bannerPadding}px; text-align: center;"> <img src="${effectiveBanner}" alt="Banner" width="${bannerWidth}" style="width: ${bannerWidth}px; max-width: 100%; height: auto; display: inline-block;"> </td> </tr>` : ''} </tbody> </table>`;
+                    finalHtml = `
+                        <table style="${tableContainerStyle}" cellpadding="0" cellspacing="0" border="0">
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <div style="${infoContainerStyle} padding-bottom: 10px;">
+                                            ${getFieldHtml(fullName, fullNameStyle)}
+                                            ${getFieldHtml(title, titleStyle)}
+                                            ${getFieldHtml(nombreSede, nombreSedeStyle)}
+                                            ${getFieldHtml(address, addressStyle)}
+                                            ${getFieldHtml(phone, phoneStyle)}
+                                            ${getFieldHtml(websiteUrl, websiteUrlStyle, 'div', true, websiteUrl)}
+                                            ${getFieldHtml(cita, citaStyle)}
+                                        </div>
+                                    </td>
+                                </tr>
+                                ${effectiveBanner ? `
+                                <tr>
+                                    <td style="padding-top: ${bannerPadding}px; text-align: ${bannerAlignment};">
+                                        <img src="${effectiveBanner}" alt="Banner" width="${bannerWidth}" style="width: ${bannerWidth}px; max-width: 100%; height: auto; display: inline-block;">
+                                    </td>
+                                </tr>` : ''}
+                            </tbody>
+                        </table>`;
                 }
                 return finalHtml;
             };

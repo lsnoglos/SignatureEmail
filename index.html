@@ -1164,24 +1164,43 @@
                         signatureData.bannerWidth = 350;
                         signatureData.bannerPadding = 0;
                     } else if (presetName === 'colorido') {
+                        
                         signatureData.selectedTemplate = 'classic';
-                        signatureData.fullNameStyle = defaultFieldStyle(20, '#006400', true, false);
-                        signatureData.titleStyle = defaultFieldStyle(14, '#8B0000');
-                        signatureData.nombreSedeStyle = defaultFieldStyle(13, '#DAA520');
-                        signatureData.websiteUrl = '';
-                        signatureData.cita = '';
+                        signatureData.fullNameStyle = defaultFieldStyle(14, '#006400', true, false);
+                        signatureData.titleStyle = defaultFieldStyle(12, '#8B0000');
+                        signatureData.nombreSedeStyle = defaultFieldStyle(11, '#DAA520');
+                        signatureData.addressStyle = defaultFieldStyle(11);
+                        signatureData.phoneStyle = defaultFieldStyle(11);
+                        signatureData.websiteUrlStyle = defaultFieldStyle(11);
+                        signatureData.citaStyle = defaultFieldStyle(11, '#555555', false, true);
+
+                        signatureData.fullName = 'Noel López Sosa';
+                        signatureData.phone = 'Cel. 58085130',
+                        signatureData.address = 'Nicaragua',
+                            
+                        signatureData.logoWidth = 87;
+                        signatureData.logoAlignment = 'right';
+                        signatureData.logoVerticalAlignment = 'middle';
+                        signatureData.logoPaddingTop = 0;
+                        signatureData.logoPaddingRight = 0;
+                        signatureData.logoPaddingBottom = 0;
+                        signatureData.logoPaddingLeft = 0;
+                        signatureData.logoWidth = 87;
+                        signatureData.logoWidth = 87;
+
+                        signatureData.lineaSeparadoraVisible = true;
+                        signatureData.lineaSeparadoraColor = '#D4AC0D';
+                        signatureData.separatorThickness = 1;
+                        signatureData.separatorHeight = 90;
+                        signatureData.separatorMargin = 10;
+                        signatureData.bannerWidth = 400;
+                        signatureData.bannerPadding = 10;
+
                         signatureData.fontFamily = 'Tahoma, Geneva, sans-serif';
                         signatureData.infoPaddingTop = 0;
                         signatureData.infoPaddingRight = 0;
                         signatureData.infoPaddingBottom = 0;
                         signatureData.infoPaddingLeft = 0;
-                        signatureData.logoWidth = 115;
-                        signatureData.logoAlignment = 'right';
-                        signatureData.logoPaddingTop = 0;
-                        signatureData.logoPaddingRight = 0;
-                        signatureData.logoPaddingBottom = 0;
-                        signatureData.logoPaddingLeft = 0;
-                        signatureData.separatorMargin = 10;
                     }
                 }
 
